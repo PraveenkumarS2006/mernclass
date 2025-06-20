@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Game Leaderboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      text-align: center;
+      padding: 40px;
+    }
+
+    
+    h1 {
+      color: #2c3e50;
+    }
+
+    #playerForm {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 200px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #2980b9;
+      color: white;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #1c5980;
+    }
+
+    .leaderboard {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .player {
+      background: #ffffff;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .player-name {
+      font-weight: bold;
+    }
+
+    .score-buttons button {
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎮 Game Leaderboard</h1>
+
+  <div id="playerForm">
+    <input type="text" id="playerName" placeholder="Enter player name">
+    <button onclick="addPlayer()">Add Player</button>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <!-- Players will appear here -->
+  </div>
+
+  <script>
+    let players = [];
+
+    function addPlayer() {
+      const nameInput = document.getElementById('playerName');
+      const name = nameInput.value.trim();
+      if (name === '') return;
+
+      players.push({ name, score: 0 });
+      nameInput.value = '';
+      renderLeaderboard();
+    }
+
+    function changeScore(index, delta) {
+      players[index].score += delta;
+      renderLeaderboard();
+    }
+
+    function resetScore(index) {
+      players[index].score = 0;
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const board = document.getElementById('leaderboard');
+      board.innerHTML = '';
+
+      const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+
+      sortedPlayers.forEach((player, idx) => {
+        const index = players.findIndex(p => p.name === player.name);
+
+        board.innerHTML += `
+          <div class="player">
+            <div class="player-name">${player.name}</div>
+            <div>
+              Score: ${player.score}
+              <span class="score-buttons">
+                <button onclick="changeScore(${index}, 1)">+1</button>
+                <button onclick="changeScore(${index}, -1)">-1</button>
+                <button onclick="resetScore(${index})">Reset</button>
+              </span>
+            </div>
+          </div>
+        `;
+      });
+    }
+  </script>
+
+</body>
+</html>
